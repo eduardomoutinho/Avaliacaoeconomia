@@ -1,0 +1,93 @@
+---
+title: "Eduardo Moutinho Gonçalves"
+format: html
+editor: visual
+---
+
+```{r}
+#| label: load-packages
+#| include: false
+
+library(tidyverse)
+library(WDI)
+library(gganimate)
+library(sidrar)
+
+# BASES DE DADOS
+
+# DADOS EM PAINEL
+dadospop <- WDI(country = 'all',
+                indicator = 'SP.POP.TOTL') 
+# CORTE TRANSVERSAL
+dadospop2023 <- WDI(country = 'all',
+                    indicator = 'SP.POP.TOTL',
+                    start = 2023, end = 2023) 
+
+# SÉRIE TEMPORAL
+dadospopbr <- WDI(country = 'BR',
+                  indicator = 'SP.POP.TOTL') 
+
+
+
+
+```
+
+## VARIÁVEL
+
+A **População Total** representa o número total de pessoas que vivem em um país ou região em determinado ano. Isso indica o indispensavel para entender o tamanho demográfico de um local e é amplamente utilizado em análises sociais, econômicas e ambientais. Mudanças na população podem influenciar políticas públicas, infraestrutura, consumo e outros aspectos do desenvolvimento humano e econômico.
+
+## GRÁFICO COM DADOS EM PAINEL
+
+Um **gráfico com dados em painel** é utilizado para mostrar informações que representam duas ou mais dimensões ao longo de um período. Esse modelo de gráfico possibilita visualizar o trajeto de diversos países, regiões ou estados em relação a uma determinada variável ao longo do tempo.
+
+O gráfico com dados em painel também torna mais disponível a comparação entre várias localidades, possibilitando a identificação de normas, como a manutenção de uma tendência de crescimento ou a paralisação em certas áreas.
+
+```{#| label: dadosempainel}
+#| warning: false
+#| echo: false
+
+ggplot(dadospop,
+       mapping = aes(x = year, y = populacao_total)) +
+  geom_point() +
+  transition_time(year) +
+  labs(title = "Ano: {frame_time}")
+      
+
+```
+
+## GRÁFICO COM CORTE TRANSVERSAL
+
+Um **gráfico com dados de corte transversal** é utilizado para exibir informações de diferentes elementos (como países, estados ou regiões) em um único ponto no tempo
+
+Esses gráficos possibilitam visualizar como diferentes unidades se comparam entre si quanto a uma variável em um determinado período, facilitando analisar de desigualdades ou padrões de comportamento. Por exemplo, ao identificar a evolução da população total em 2023,
+
+```{#| label: dadoscortetransversal}
+#| warning: false
+#| echo: false
+
+ggplot(dadospop2023,
+       mapping = aes(x = country, y = populacao_total)) +
+  geom_point() +
+  theme(axis.text.x = element_blank())
+
+
+```
+
+## GRÁFICO COM SÉRIE TEMPORAL
+
+O **gráfico com dados de série temporal** serve para observar o progresso de somente uma variável durante os anos. Esse tipo de gráfico permite visualizar como uma variável muda no decorrer diferentes períodos, o que ajuda a identificar tendências, ciclos e variações sazonais. Por exemplo, ao trabalhar com a variável "População total", o gráfico de série temporal representa os dados específicos de um único país (Brasil, no caso) ao longo dos anos.
+
+Com a série temporal, pode-se visualizar a mudança da População total de forma progressiva, observando-se, por exemplo, anos de intensifiação ou de estagnação, e associando essas reações com outros eventos históricos, como avanços no sistema de saúde ou crises da economia.
+
+```{#| label: dadosserietemporal}
+#| warning: false
+#| echo: false
+
+ggplot(dadospopbr,
+       mapping = aes(x = year, y = populacao_total)) +
+  geom_point() +
+  geom_line() +
+  transition_reveal(year) 
+
+
+```
